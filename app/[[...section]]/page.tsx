@@ -7,6 +7,7 @@ import { MasterManager } from "@/components/master-manager";
 import { MasterTabs } from "@/components/master-tabs";
 import { LotsManager } from "@/components/lots-manager";
 import { OperationsManager } from "@/components/operations-manager";
+import { RealDashboard } from "@/components/real-dashboard";
 import { createClient } from "@/lib/supabase/server";
 
 const names:Record<string,string>={inicio:"Inicio",produccion:"Producción",envios:"Envíos",recepciones:"Recepciones",ventas:"Ventas",finanzas:"Finanzas",maestros:"Maestros",administracion:"Administración",productores:"Productores",clientes:"Clientes",trabajadores:"Trabajadores",transportistas:"Transportistas",materiales:"Materiales",productos:"Productos",variedades:"Variedades","motivos-rechazo":"Motivos de rechazo","categorias-gasto":"Categorías de gasto"};
@@ -27,5 +28,5 @@ export default async function Page({params}:{params:Promise<{section?:string[]}>
   const inMasters=slug==="maestros"||Boolean(table);const isOperation=["envios","recepciones","ventas","finanzas"].includes(slug);
   return <AppShell><header><div><p className="eyebrow">ERP Familia</p><h1>{title}</h1><p className="muted">Control simple y conectado de la operación frutícola.</p></div></header>{inMasters?<MasterTabs/>:null}{slug==="inicio"?<Dashboard/>:slug==="produccion"?<LotsManager {...lotData}/>:slug==="maestros"?<section className="masterGrid">{masters.map(({n,h,i:Icon})=><Link href={h} className="masterCard" key={h}><span><Icon/></span><div><h2>{n}</h2><p>Gestionar registros de {n.toLowerCase()}.</p></div><ArrowRight size={18}/></Link>)}</section>:table?<MasterManager table={table} title={title} rows={rows as never[]} products={products}/>:isOperation?<OperationsManager module={slug} rows={operationRows} choices={operationChoices}/>:slug==="administracion"?<section className="panel"><div className="panelHead"><div><h2>Usuarios y permisos</h2><p>Acceso actual al sistema.</p></div></div><div className="tableWrap"><table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th></tr></thead><tbody>{profiles.map(p=><tr key={String(p.id)}><td>{String(p.nombre)}</td><td>{String(p.rol)}</td><td><span className={`status ${p.activo?"":"off"}`}>{p.activo?"Activo":"Inactivo"}</span></td></tr>)}</tbody></table></div></section>:null}</AppShell>
 }
-function Dashboard(){const cards=[{l:"Lotes activos",v:"—",i:Sprout},{l:"Envíos en tránsito",v:"—",i:Truck},{l:"Recepciones pendientes",v:"—",i:ClipboardCheck},{l:"Ventas del mes",v:"—",i:CircleDollarSign}];return <><section className="stats">{cards.map(({l,v,i:Icon})=><article key={l}><span><Icon/></span><div><p>{l}</p><strong>{v}</strong></div></article>)}</section><section className="panel flow"><Boxes/><div><h2>LOTE → ENVÍO → RECEPCIÓN → VENTA</h2><p>La columna vertebral operativa ya está reflejada en el esquema.</p></div></section></>}
+function Dashboard(){return <RealDashboard/>}
 
