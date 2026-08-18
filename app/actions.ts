@@ -1,0 +1,10 @@
+"use server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+const allowed=new Set(["productor","cliente","trabajador","transportista","material"]);const pathFor:Record<string,string>={productor:"/productores",cliente:"/clientes",trabajador:"/trabajadores",transportista:"/transportistas",material:"/materiales"};
+async function authenticated(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Sesión requerida");return {supabase,user}}
+export async function saveMaster(formData:FormData){const table=String(formData.get("table"));if(!allowed.has(table))throw new Error("Tabla no permitida");const {supabase,user}=await authenticated();const payload:Record<string,string|number|null>={nombre:String(formData.get("nombre")||"").trim(),updated_by:user.id};for(const key of ["numero_documento","telefono"]){const value=String(formData.get(key)||"").trim();if(value)payload[key]=value}if(table==="material"){payload.unidad_medida=String(formData.get("unidad_medida")||"").trim();const cost=String(formData.get("costo_referencia")||"");payload.costo_referencia=cost?Number(cost):null}const {error}=await supabase.from(table).insert({...payload,created_by:user.id});if(error)throw new Error(error.message);revalidatePath(pathFor[table])}
+export async function toggleMaster(formData:FormData){const table=String(formData.get("table"));if(!allowed.has(table))throw new Error("Tabla no permitida");const {supabase,user}=await authenticated();const {error}=await supabase.from(table).update({activo:String(formData.get("activo"))!=="true",updated_by:user.id}).eq("id",String(formData.get("id")));if(error)throw new Error(error.message);revalidatePath(pathFor[table])}
+export async function logout(){const supabase=await createClient();await supabase.auth.signOut();redirect("/login")}
+
