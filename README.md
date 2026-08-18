@@ -1,1 +1,1 @@
-# Sistema-de-gestion-de-ventas-finanzas-e-inventario-ERP
+# ERP para compra y distribución de frutas en javas
