@@ -8,6 +8,7 @@ import "./corrections.css";
 import "./dashboard.css";
 import "./admin.css";
 import "./quality.css";
+import "./reports.css";
 export const metadata: Metadata = { title:"ERP Familia", description:"Gestión frutícola" };
 export default function RootLayout({children}:{children:React.ReactNode}) { return <html lang="es"><body>{children}</body></html>; }
 
