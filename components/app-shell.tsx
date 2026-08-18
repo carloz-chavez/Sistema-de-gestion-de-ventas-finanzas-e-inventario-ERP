@@ -1,3 +1,4 @@
 import { Sidebar } from "./sidebar";
-export function AppShell({children}:{children:React.ReactNode}) { return <div className="shell"><Sidebar/><main>{children}</main></div>; }
+import { SafetyNet } from "./safety-net";
+export function AppShell({children}:{children:React.ReactNode}) { return <div className="shell"><SafetyNet/><Sidebar/><main>{children}</main></div>; }
 
