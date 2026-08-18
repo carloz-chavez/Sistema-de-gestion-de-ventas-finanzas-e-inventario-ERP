@@ -14,7 +14,7 @@ export function LotsManager({lots,producers,varieties,materials,workers}:{lots:L
     <label>Producto y variedad<select name="variedad_id" required defaultValue=""><option value="" disabled>Seleccionar variedad</option>{varieties.map(x=><option key={x.id} value={x.id}>{x.producto?.nombre} — {x.nombre}</option>)}</select></label>
     <label>Fecha<input name="fecha_registro" type="date" required defaultValue={new Date().toISOString().slice(0,10)}/></label><label>Javas estimadas<input name="cantidad_estimada_javas" type="number" min="1"/></label><label>Observaciones<textarea name="observaciones" rows={3}/></label><button className="primary">Crear lote</button>
   </form></section>
-  <section className="lotCards">{lots.map(l=><LotCard key={l.id} lot={l} producers={producers} varieties={varieties} materials={materials} workers={workers}/>)}</section>
+  <section className="lotCards">{lots.filter(l=>l.estado!=="CERRADO").map(l=><LotCard key={l.id} lot={l} producers={producers} varieties={varieties} materials={materials} workers={workers}/>)}</section>
 </div></div>}
 
 function LotCard({lot,producers,varieties,materials,workers}:{lot:Lot;producers:Choice[];varieties:Variety[];materials:Choice[];workers:Choice[]}){
