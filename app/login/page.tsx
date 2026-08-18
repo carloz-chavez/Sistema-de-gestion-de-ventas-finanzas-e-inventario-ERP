@@ -1,0 +1,4 @@
+import { Sprout } from "lucide-react";
+import { login } from "./actions";
+export default async function Login({searchParams}:{searchParams:Promise<{error?:string}>}){const {error}=await searchParams;return <main className="loginPage"><section className="loginCard"><div className="loginBrand"><span className="brandIcon"><Sprout/></span><div><strong>ERP Familia</strong><small>Gestión frutícola</small></div></div><div><p className="eyebrow">Acceso seguro</p><h1>Bienvenido</h1><p className="muted">Ingresa con tu usuario de Supabase.</p></div>{error?<p className="errorBox">{error}</p>:null}<form action={login} className="loginForm"><label>Correo electrónico<input name="email" type="email" required autoComplete="email"/></label><label>Contraseña<input name="password" type="password" required autoComplete="current-password"/></label><button className="primary" type="submit">Iniciar sesión</button></form></section></main>}
+
