@@ -11,5 +11,5 @@ export const navigation = [
   { label: "Administración", href: "/administracion", icon: Settings },
 ] as const;
 
-export const masterPaths = ["/productores", "/clientes", "/trabajadores", "/transportistas", "/materiales"];
+export const masterPaths = ["/productores", "/clientes", "/trabajadores", "/transportistas", "/materiales", "/productos", "/variedades", "/motivos-rechazo", "/categorias-gasto"];
 
