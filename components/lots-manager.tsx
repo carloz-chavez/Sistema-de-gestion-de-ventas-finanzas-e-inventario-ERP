@@ -1,4 +1,4 @@
-import { addProductionLabor, addProductionMaterial, createLot, finishProduction, startProduction } from "@/app/actions";
+import { addProductionLabor, addProductionMaterial, archiveLot, createLot, finishProduction, startProduction, updateLot } from "@/app/actions";
 
 type Choice={id:number;nombre:string};
 type Variety=Choice&{producto:{nombre:string}|null};
@@ -14,14 +14,15 @@ export function LotsManager({lots,producers,varieties,materials,workers}:{lots:L
     <label>Producto y variedad<select name="variedad_id" required defaultValue=""><option value="" disabled>Seleccionar variedad</option>{varieties.map(x=><option key={x.id} value={x.id}>{x.producto?.nombre} — {x.nombre}</option>)}</select></label>
     <label>Fecha<input name="fecha_registro" type="date" required defaultValue={new Date().toISOString().slice(0,10)}/></label><label>Javas estimadas<input name="cantidad_estimada_javas" type="number" min="1"/></label><label>Observaciones<textarea name="observaciones" rows={3}/></label><button className="primary">Crear lote</button>
   </form></section>
-  <section className="lotCards">{lots.map(l=><LotCard key={l.id} lot={l} materials={materials} workers={workers}/>)}</section>
+  <section className="lotCards">{lots.map(l=><LotCard key={l.id} lot={l} producers={producers} varieties={varieties} materials={materials} workers={workers}/>)}</section>
 </div></div>}
 
-function LotCard({lot,materials,workers}:{lot:Lot;materials:Choice[];workers:Choice[]}){
+function LotCard({lot,producers,varieties,materials,workers}:{lot:Lot;producers:Choice[];varieties:Variety[];materials:Choice[];workers:Choice[]}){
   const production=Array.isArray(lot.produccion)?lot.produccion[0]:lot.produccion;
   const materialRows=production?.detalle_produccion_material||[];const laborRows=production?.detalle_mano_obra||[];
   const materialCost=materialRows.reduce((a,x)=>a+Number(x.costo_total),0);const laborCost=laborRows.reduce((a,x)=>a+Number(x.costo_total),0);const finished=production?.estado==="TERMINADA";
   return <article className="panel lotCard"><div className="lotHead"><div><p className="eyebrow">{lot.codigo}</p><h2>{lot.variedad?.producto?.nombre} — {lot.variedad?.nombre}</h2><p>{lot.productor?.nombre} · {lot.fecha_registro} · {lot.cantidad_estimada_javas||"—"} javas estimadas</p></div><span className="status">{lot.estado.replaceAll("_"," ")}</span></div>
+  {lot.estado==="RECIBIDO"&&<div className="lotEdit"><div><h3>Corregir datos del lote</h3><p>Disponible mientras la producción no haya iniciado.</p></div><form action={updateLot} className="lotEditForm"><input type="hidden" name="id" value={lot.id}/><select name="productor_id" defaultValue={producers.find(x=>x.nombre===lot.productor?.nombre)?.id} aria-label="Productor">{producers.map(x=><option key={x.id} value={x.id}>{x.nombre}</option>)}</select><select name="variedad_id" defaultValue={varieties.find(x=>x.nombre===lot.variedad?.nombre&&x.producto?.nombre===lot.variedad?.producto?.nombre)?.id} aria-label="Variedad">{varieties.map(x=><option key={x.id} value={x.id}>{x.producto?.nombre} — {x.nombre}</option>)}</select><input name="fecha_registro" type="date" defaultValue={lot.fecha_registro}/><input name="cantidad_estimada_javas" type="number" min="1" defaultValue={lot.cantidad_estimada_javas||undefined} placeholder="Javas"/><input name="observaciones" placeholder="Observaciones"/><button className="secondary">Guardar cambios</button></form><form action={archiveLot}><input type="hidden" name="id" value={lot.id}/><button className="danger">Eliminar lote</button></form></div>}
   {!production?<form action={startProduction} className="lotAction"><input type="hidden" name="lote_id" value={lot.id}/><button className="primary">Iniciar producción</button></form>:<>
     <div className="productionSummary"><span>Materiales <strong>{money(materialCost)}</strong></span><span>Mano de obra <strong>{money(laborCost)}</strong></span><span>Enjavadas <strong>{production.cantidad_enjavada??"—"}</strong></span><span>Javas <strong>{money(production.costo_total_javas)}</strong></span></div>
     <div className="productionWorkspace">
