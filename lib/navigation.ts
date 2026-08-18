@@ -1,4 +1,4 @@
-import { Boxes, CircleDollarSign, ClipboardCheck, House, Settings, ShoppingCart, Truck, Warehouse } from "lucide-react";
+import { BarChart3, Boxes, CircleDollarSign, ClipboardCheck, House, Settings, ShoppingCart, Truck, Warehouse } from "lucide-react";
 
 export const navigation = [
   { label: "Inicio", href: "/inicio", icon: House },
@@ -7,6 +7,7 @@ export const navigation = [
   { label: "Recepciones", href: "/recepciones", icon: ClipboardCheck },
   { label: "Ventas", href: "/ventas", icon: ShoppingCart },
   { label: "Finanzas", href: "/finanzas", icon: CircleDollarSign },
+  { label: "Reportes", href: "/reportes", icon: BarChart3 },
   { label: "Maestros", href: "/maestros", icon: Warehouse },
   { label: "Administración", href: "/administracion", icon: Settings },
 ] as const;
