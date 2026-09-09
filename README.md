@@ -10,10 +10,4 @@ Flujo principal: `LOTE → ENVÍO → RECEPCIÓN → VENTA`.
 - Vercel: despliegues automáticos.
 - Supabase: autenticación y base de datos.
 
-## Configuración local
 
-1. Copiar `.env.example` como `.env.local`.
-2. Agregar la URL y la clave pública de Supabase.
-3. Ejecutar `npm install` y `npm run dev`.
-
-Las credenciales nunca deben subirse al repositorio.
